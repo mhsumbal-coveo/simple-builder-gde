@@ -29,16 +29,16 @@ firebase.auth().onAuthStateChanged((user) => {
 function showSearchPage(user) {
     loginContainer.style.display = 'none';
     searchPageContent.style.display = 'block';
-    database.ref('searchPages').orderByKey().equalTo(searchPageName).once('value')
+    database.ref('searchPages/' + searchPageName).once('value')
     .then(snapshot => {
         const searchPageData = snapshot.val();
         if (searchPageData) {
             // Render the search page content
-            if(user.email == searchPageData[searchPageName].username){
+            if(user.email == searchPageData.username){
                 searchPageContent.style.display = 'block';
                 // Hide the login container
                 loginContainer.style.display = 'none';
-                renderSearchPage(searchPageData[searchPageName]);
+                renderSearchPage(searchPageData);
             }else{
                 alert('You are not authorized to view this page');
                 firebase.auth().signOut().then(() => {
@@ -57,6 +57,14 @@ function showSearchPage(user) {
     })
     .catch(error => {
         console.error('Error retrieving search page content from Firebase:', error);
+        alert(error.message);
+        firebase.auth().signOut().then(() => {
+            // Sign-out successful
+            showLoginPage();
+        }).catch((error) => {
+            // An error happened
+            console.error('Error signing out:', error);
+        });
     });
 }
 
