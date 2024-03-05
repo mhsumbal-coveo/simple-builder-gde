@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Search Page</title>
+</head>
+<body>
+    <h1>Simple Atomic Hosted GDE</h1>
+    <form id="searchPageForm">
+        <label  for="accessToken">Access Token:</label><br>
+        <input required type="text" id="accessToken" name="accessToken"><br>
+        <label for="organizationId">Organization ID:</label><br>
+        <input required type="text" id="organizationId" name="organizationId"><br>
+        <label for="searchPageName">Search Page Name:</label><br>
+        <input required type="text" id="searchPageName" name="searchPageName"><br>
+        <label for="username">Username:</label><br>
+        <input required type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input required type="password" id="password" name="password"><br>
+        <br><br>
+        <input type="submit" value="Create Search Page">
+    </form>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="sampleatomicpage.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

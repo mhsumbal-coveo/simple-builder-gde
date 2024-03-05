@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css">
+    <link rel="stylesheet" href="searchpage.css">
+
+    <title>Search Page</title>
+</head>
+<body>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs/loader.js"></script>
+    <script src="firebase-config.js"></script>
+    <button id="editButton" style="position: fixed; bottom: 20px; right: 20px;">Edit</button>
+    <div id="loginContainer" style="display: none;">
+        <h2>Login</h2>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <button id="loginButton">Login</button>
+    </div>
+    <div id="searchPageContent" style="display: none;"></div>
+    
+    <div id="editorModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="editorContainer" style="width: 90%; height: 800px;"></div>
+            <button id="saveButton">Save</button>
+        </div>
+    </div>
+    <script src="searchpage.js"></script>
+</body>
+</html>
