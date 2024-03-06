@@ -12,7 +12,6 @@ database.ref('previewPages/' + searchPageName).once('value')
 
     if (searchPageData) {
         // Render the search page content
-        console.log(searchPageData)
         renderSearchPage(searchPageData)
         
     } else {
@@ -27,7 +26,6 @@ database.ref('previewPages/' + searchPageName).once('value')
 
 
 function renderSearchPage(searchPageData) {
-    console.log(searchPageData)
     const accessToken = searchPageData.accesstoken;
     const organizationId = searchPageData.organizationid;
     const authentication = searchPageData.authentication;
@@ -62,4 +60,5 @@ function renderSearchPage(searchPageData) {
 
     // Render the search page HTML content
     document.getElementById('searchPageContent').innerHTML = htmlContent;
+    document.title = searchPageName
 }
