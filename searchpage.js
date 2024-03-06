@@ -1,7 +1,8 @@
 // Retrieve the search page name from the query parameter
 const urlParams = new URLSearchParams(window.location.search);
 const searchPageName = urlParams.get('searchPageName');
-
+var htmlContent = ``;
+var searchPage = null;
 // Reference to the Firebase Realtime Database
 const database = firebase.database();
 
@@ -33,6 +34,7 @@ function showSearchPage(user) {
     .then(snapshot => {
         const searchPageData = snapshot.val();
         if (searchPageData) {
+            searchPage = searchPageData;
             // Render the search page content
             if(user.email == searchPageData.username){
                 searchPageContent.style.display = 'block';
@@ -102,6 +104,8 @@ const modal = document.getElementById('editorModal');
 // Get the button that opens the modal
 const btn = document.getElementById('editButton');
 
+const publishBtn = document.getElementById('PublishButton');
+
 // Get the <span> element that closes the modal
 const span = document.getElementsByClassName('close')[0];
 
@@ -111,13 +115,30 @@ btn.onclick = function() {
     openMonacoEditor();
 }
 
+
+publishBtn.onclick = function() {
+    const searchPageRef = firebase.database().ref('previewPages/' + searchPageName);
+    searchPageRef.set({
+        html: htmlContent,
+        accesstoken: searchPage.accesstoken,
+        organizationid: searchPage.organizationid,
+    })
+    .then(() => {
+        console.log('Search page data saved successfully.');
+    window.location.href = 'preview.html?searchPageName=' + searchPageName;
+}) .catch(error => {
+    console.error('Error saving search page data:', error);
+});
+
+}
+
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
     document.querySelector('.monaco-editor').remove();
     modal.style.display = 'none';
 }
 
-var htmlContent = ``;
+
 
 // Function to open Monaco code editor
 function openMonacoEditor() {
