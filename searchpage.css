@@ -39,6 +39,34 @@
 
 
 #saveButton{
-    position: absolute;
-    z-index: 9999;
+ 
+    position: fixed;
+    top: 20px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #007bff;
+    color : white
+}
+
+.styledButton {
+    position: fixed;
+    top: 20px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#editButton {
+    right: 20px;
+    background-color: #007bff;
+    color: #fff;
+}
+
+#PublishButton {
+    right: 100px;
+    background-color: #28a745;
+    color: #fff;
 }
