@@ -15,6 +15,17 @@ const usernameInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const loginButton = document.getElementById('loginButton');
 
+// Get the modal
+const modal = document.getElementById('editorModal');
+
+// Get the button that opens the modal
+const btn = document.getElementById('editButton');
+
+const publishBtn = document.getElementById('PublishButton');
+
+// Get the <span> element that closes the modal
+const span = document.getElementsByClassName('close')[0];
+
 
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -74,6 +85,8 @@ function showSearchPage(user) {
 function showLoginPage() {
     loginContainer.style.display = 'block';
     searchPageContent.style.display = 'none';
+    btn.style.display = 'none';
+    publishBtn.style.display = 'none';
 }
 
 // Add event listener to the login button
@@ -98,16 +111,7 @@ loginButton.addEventListener('click', function() {
     });
 });
 
-// Get the modal
-const modal = document.getElementById('editorModal');
 
-// Get the button that opens the modal
-const btn = document.getElementById('editButton');
-
-const publishBtn = document.getElementById('PublishButton');
-
-// Get the <span> element that closes the modal
-const span = document.getElementsByClassName('close')[0];
 
 // When the user clicks the button, open the modal
 btn.onclick = function() {
@@ -184,6 +188,8 @@ function pushToDatabase(htmlContent) {
 
 // Function to render the search page content
 function renderSearchPage(searchPageData) {
+    btn.style.display = 'block';
+    publishBtn.style.display = 'block';
     console.log(searchPageData)
     const accessToken = searchPageData.accesstoken;
     const organizationId = searchPageData.organizationid;
