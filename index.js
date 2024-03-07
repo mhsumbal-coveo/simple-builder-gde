@@ -24,6 +24,7 @@ function saveSearchPageData(searchPageName, accessToken, organizationId, usernam
                 .then((userCredential) => {
                     console.log('User created successfully:', userCredential.user);
                     // Redirect to search page
+                    
                     const searchPageRef = firebase.database().ref('searchPages/' + searchPageName);
                     searchPageRef.set({
                         accesstoken: accessToken,
