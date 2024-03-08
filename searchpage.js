@@ -129,7 +129,7 @@ publishBtn.onclick = function() {
     })
     .then(() => {
         console.log('Search page data saved successfully.');
-    window.location.href = 'preview.html?searchPageName=' + searchPageName;
+    window.open('/preview.html?searchPageName=' + searchPageName);
 }) .catch(error => {
     console.error('Error saving search page data:', error);
 });
