@@ -1,4 +1,4 @@
-# Simple Hosted GDE
+# Simple Builder GDE
 
 This demo environment allows users to create search pages powered by the Coveo Atomic library. Features includes:
 
@@ -12,7 +12,7 @@ The demo environment consists of three main pages:
 
 ### Home Page
 
-- **Link:** [Hosted GDE Home Page](https://hosted-gde.netlify.app)
+- **Link:** [Simple Builder GDE Home Page](https://hosted-gde.netlify.app)
 - **Description:** This page is used to create search pages.
 
 ### Edit Page
