@@ -37,6 +37,8 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
+
+
 // Function to show the search page content
 function showSearchPage(user) {
     loginContainer.style.display = 'none';
@@ -121,18 +123,28 @@ btn.onclick = function() {
 
 
 publishBtn.onclick = function() {
-    const searchPageRef = firebase.database().ref('previewPages/' + searchPageName);
-    searchPageRef.set({
-        html: htmlContent,
-        accesstoken: searchPage.accesstoken,
-        organizationid: searchPage.organizationid,
-    })
-    .then(() => {
+ 
+    database.ref('searchPages/' + searchPageName).update({
+        publishhtml: htmlContent,
+    }).then(() => {
+        const searchPageRef = firebase.database().ref('previewPages/' + searchPageName);
+        searchPageRef.set({
+            html: htmlContent,
+            accesstoken: searchPage.accesstoken,
+            organizationid: searchPage.organizationid,
+        })
+        .then(() => {
         console.log('Search page data saved successfully.');
-    window.open('/preview.html?searchPageName=' + searchPageName);
-}) .catch(error => {
-    console.error('Error saving search page data:', error);
-});
+        window.open('/preview?searchPageName=' + searchPageName);
+        window.location.reload();
+    }) .catch(error => {
+        console.error('Error saving search page data:', error);
+    });
+    }).catch(error => {
+        console.error('Error updating HTML content in Firebase:', error);
+    });
+
+    
 
 }
 
@@ -163,24 +175,103 @@ function openMonacoEditor() {
             const editedHtmlContent = editor.getValue();
             document.querySelector('.monaco-editor').remove();
             // Push edited HTML content to Firebase
-            pushToDatabase(editedHtmlContent);
+            pushToDatabase(editedHtmlContent, ()=>{
+                modal.style.display = 'none';
+                window.location.reload();
+            });
             // Close the modal after saving
+         
+        });
+    });
+
+
+
+    document.getElementById('lastSavedButton').addEventListener('click', function() {
+        document.querySelector('.monaco-editor').remove();
+        // Push edited HTML content to Firebase
+        getLastSavedHtml(()=>{
             modal.style.display = 'none';
             window.location.reload();
         });
+        // Close the modal after saving
+    })
+
+    document.getElementById('lastPublish').addEventListener('click', function() {
+        document.querySelector('.monaco-editor').remove();
+        // Push edited HTML content to Firebase
+        getlastPublishHtml(()=>{
+            modal.style.display = 'none';
+            window.location.reload();
+        });
+        // Close the modal after saving
+    })
+
+
+
+}
+
+function getlastPublishHtml(callback){
+    database.ref('searchPages/' + searchPageName).get().then((snapshot)=>{
+        const snapshotData = snapshot.val();
+        const publishhtml = snapshotData.publishhtml;
+        const html = snapshotData.html;
+            database.ref('searchPages/' + searchPageName).update({
+                html: publishhtml,
+                lasthtml: html,
+                publishhtml: null
+            }).then(() => {
+                console.log('HTML content updated in Firebase.');
+                callback();
+            }).catch(error => {
+                console.error('Error updating HTML content in Firebase:', error);
+            });
+    }).catch(error => { 
+        console.error('Error updating HTML content in Firebase:', error);
+    });
+}
+
+function getLastSavedHtml(callback){
+    database.ref('searchPages/' + searchPageName).get().then((snapshot)=>{
+        const snapshotData = snapshot.val();
+        const lasthtml = snapshotData.lasthtml;
+            database.ref('searchPages/' + searchPageName).update({
+                html: lasthtml,
+                lasthtml: null
+            }).then(() => {
+                console.log('HTML content updated in Firebase.');
+                callback();
+            }).catch(error => {
+                console.error('Error updating HTML content in Firebase:', error);
+            });
+    }).catch(error => { 
+        console.error('Error updating HTML content in Firebase:', error);
     });
 }
 
 // Function to push edited HTML content to Firebase Realtime Database
-function pushToDatabase(htmlContent) {
+function pushToDatabase(htmlContent, callback) {
     // Push the edited HTML content to Firebase Realtime Database
-    database.ref('searchPages/' + searchPageName).update({
-        html: htmlContent
-    }).then(() => {
-        console.log('HTML content updated in Firebase.');
-    }).catch(error => {
+    database.ref('searchPages/' + searchPageName).get().then((snapshot)=>{
+        const snapshotData = snapshot.val();
+        const lasthtml = snapshotData.html;
+        if(lasthtml !== htmlContent){
+            database.ref('searchPages/' + searchPageName).update({
+                html: htmlContent,
+                lasthtml: lasthtml,
+            }).then(() => {
+                console.log('HTML content updated in Firebase.');
+                callback();
+            }).catch(error => {
+                console.error('Error updating HTML content in Firebase:', error);
+            });
+        }else{
+            callback();
+        }
+        
+    }).catch(error => { 
         console.error('Error updating HTML content in Firebase:', error);
     });
+
 }
 
 // Retrieve search page content from Firebase Realtime Database
@@ -196,6 +287,21 @@ function renderSearchPage(searchPageData) {
     const authentication = searchPageData.authentication;
     const html = searchPageData.html;
      htmlContent = html;
+    console.log(searchPageData)
+     if(searchPageData?.lasthtml){
+        document.getElementById('lastSavedButton').removeAttribute("disabled")
+     }
+     else{
+        document.getElementById('lastSavedButton').setAttribute("disabled", "true")
+     }
+
+     if(searchPageData?.publishhtml){
+        document.getElementById('lastPublish').removeAttribute("disabled")
+     }
+     else{
+        document.getElementById('lastPublish').setAttribute("disabled", "true")
+     }
+
     if (accessToken && organizationId) {
         // Update HTML elements with access token and organization ID
         const scriptTag = document.createElement('script');

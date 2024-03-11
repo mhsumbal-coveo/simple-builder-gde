@@ -37,17 +37,36 @@
     cursor: pointer;
 }
 
-
 #saveButton{
- 
-    position: fixed;
-    top: 20px;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     background-color: #007bff;
-    color : white
+    color : white;
+    
+}
+
+#lastSavedButton{
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #ff6200;
+    color : white;
+}
+
+#lastSavedButton:disabled,#lastPublish:disabled{
+   background-color: #ccc;
+}
+
+#lastPublish{
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #ff6200;
+    color : white;
 }
 
 .styledButton {
