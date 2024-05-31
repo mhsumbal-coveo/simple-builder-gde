@@ -90,6 +90,15 @@
     color: #fff;
 }
 
+#AuthCheckbox {
+    right: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#AuthCheckbox label{
+    margin: 0;
+}
 
 #loginContainer {
     max-width: 400px;

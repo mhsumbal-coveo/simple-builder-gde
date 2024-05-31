@@ -248,6 +248,14 @@ function getLastSavedHtml(callback){
     });
 }
 
+
+var checkbox = document.querySelector("#AuthCheckbox input[type='checkbox']");
+
+checkbox.addEventListener('change', function() {
+    pushAuthConfigToDatabase(this.checked)
+});
+
+
 // Function to push edited HTML content to Firebase Realtime Database
 function pushToDatabase(htmlContent, callback) {
     // Push the edited HTML content to Firebase Realtime Database
@@ -274,6 +282,18 @@ function pushToDatabase(htmlContent, callback) {
 
 }
 
+function pushAuthConfigToDatabase(check, callback) {
+    // Push the edited HTML content to Firebase Realtime Database
+            database.ref('searchPages/' + searchPageName).update({
+                authenticationenabled: check,
+            }).then(() => {
+                console.log('Authentication config  updated in Firebase.');
+            }).catch(error => {
+                console.error('Error updating HTML content in Firebase:', error);
+            });
+
+}
+
 // Retrieve search page content from Firebase Realtime Database
 
 
@@ -286,6 +306,10 @@ function renderSearchPage(searchPageData) {
     const organizationId = searchPageData.organizationid;
     const authentication = searchPageData.authentication;
     const html = searchPageData.html;
+    const auth = searchPageData.authenticationenabled;
+    if(auth){
+        document.querySelector("#AuthCheckbox input[type='checkbox']").checked = true;
+    }
      htmlContent = html;
     console.log(searchPageData)
      if(searchPageData?.lasthtml){
