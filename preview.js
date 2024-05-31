@@ -125,7 +125,7 @@ function renderSearchPage(searchPageData) {
         scriptTag.setAttribute('type', 'module');
         scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v2/atomic.esm.js`);
         document.head.appendChild(scriptTag);
-    
+        document.title = searchPageName;
         scriptTag.onload = async () => {
             await customElements.whenDefined('atomic-search-interface');
             const searchInterface = document.querySelector('atomic-search-interface');

@@ -27,7 +27,7 @@ const publishBtn = document.getElementById('PublishButton');
 // Get the <span> element that closes the modal
 const span = document.getElementsByClassName('close')[0];
 
-
+const authDiv = document.querySelector("#AuthCheckbox");
 const authcheckbox = document.querySelector("#AuthCheckbox input[type='checkbox']");
 
 authcheckbox.addEventListener('change', function() {
@@ -99,7 +99,7 @@ function showLoginPage() {
     searchPageContent.style.display = 'none';
     btn.style.display = 'none';
     publishBtn.style.display = 'none';
-    authcheckbox.style.display = 'none'
+    authDiv.style.display = 'none'
 }
 
 // Add event listener to the login button
@@ -307,8 +307,7 @@ function pushAuthConfigToDatabase(check, callback) {
 function renderSearchPage(searchPageData) {
     btn.style.display = 'block';
     publishBtn.style.display = 'block';
-    authcheckbox.style.display = 'block';
-    console.log(searchPageData)
+    authDiv.style.display = 'flex';
     const accessToken = searchPageData.accesstoken;
     const organizationId = searchPageData.organizationid;
     const authentication = searchPageData.authentication;
