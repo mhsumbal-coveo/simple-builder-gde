@@ -3,6 +3,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const searchPageName = urlParams.get('searchPageName');
 var htmlContent = ``;
 var searchPage = null;
+var authenabled = false;
 // Reference to the Firebase Realtime Database
 const database = firebase.database();
 
@@ -25,6 +26,15 @@ const publishBtn = document.getElementById('PublishButton');
 
 // Get the <span> element that closes the modal
 const span = document.getElementsByClassName('close')[0];
+
+
+const authcheckbox = document.querySelector("#AuthCheckbox input[type='checkbox']");
+
+authcheckbox.addEventListener('change', function() {
+    pushAuthConfigToDatabase(this.checked)
+    authenabled = this.checked;
+});
+
 
 
 firebase.auth().onAuthStateChanged((user) => {
@@ -89,6 +99,7 @@ function showLoginPage() {
     searchPageContent.style.display = 'none';
     btn.style.display = 'none';
     publishBtn.style.display = 'none';
+    authcheckbox.style.display = 'none'
 }
 
 // Add event listener to the login button
@@ -132,6 +143,7 @@ publishBtn.onclick = function() {
             html: htmlContent,
             accesstoken: searchPage.accesstoken,
             organizationid: searchPage.organizationid,
+            authenticationenabled : authenabled,
         })
         .then(() => {
         console.log('Search page data saved successfully.');
@@ -249,12 +261,6 @@ function getLastSavedHtml(callback){
 }
 
 
-var checkbox = document.querySelector("#AuthCheckbox input[type='checkbox']");
-
-checkbox.addEventListener('change', function() {
-    pushAuthConfigToDatabase(this.checked)
-});
-
 
 // Function to push edited HTML content to Firebase Realtime Database
 function pushToDatabase(htmlContent, callback) {
@@ -301,6 +307,7 @@ function pushAuthConfigToDatabase(check, callback) {
 function renderSearchPage(searchPageData) {
     btn.style.display = 'block';
     publishBtn.style.display = 'block';
+    authcheckbox.style.display = 'block';
     console.log(searchPageData)
     const accessToken = searchPageData.accesstoken;
     const organizationId = searchPageData.organizationid;
