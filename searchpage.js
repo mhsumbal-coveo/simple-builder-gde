@@ -35,8 +35,6 @@ authcheckbox.addEventListener('change', function() {
     authenabled = this.checked;
 });
 
-
-
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
         // User is signed in
@@ -46,8 +44,6 @@ firebase.auth().onAuthStateChanged((user) => {
         showLoginPage();
     }
 });
-
-
 
 // Function to show the search page content
 function showSearchPage(user) {
@@ -64,7 +60,7 @@ function showSearchPage(user) {
                 // Hide the login container
                 loginContainer.style.display = 'none';
                 renderSearchPage(searchPageData);
-            }else{
+            } else {
                 alert('You are not authorized to view this page');
                 firebase.auth().signOut().then(() => {
                     // Sign-out successful
@@ -74,7 +70,6 @@ function showSearchPage(user) {
                     console.error('Error signing out:', error);
                 });
             }
-            
         } else {
             console.error('Search page not found in Firebase.');
             document.getElementById('searchPageContent').innerHTML = `<h1>Search Page Not Found</h1>`;
@@ -99,7 +94,7 @@ function showLoginPage() {
     searchPageContent.style.display = 'none';
     btn.style.display = 'none';
     publishBtn.style.display = 'none';
-    authDiv.style.display = 'none'
+    authDiv.style.display = 'none';
 }
 
 // Add event listener to the login button
@@ -115,8 +110,6 @@ loginButton.addEventListener('click', function() {
         console.log(user);
         // Show the search page content
         showSearchPage(user);
-        // Render the search page content
-
     })
     .catch((error) => {
         // Handle errors here (e.g., display error message)
@@ -124,17 +117,13 @@ loginButton.addEventListener('click', function() {
     });
 });
 
-
-
 // When the user clicks the button, open the modal
 btn.onclick = function() {
     modal.style.display = 'block';
     openMonacoEditor();
 }
 
-
 publishBtn.onclick = function() {
- 
     database.ref('searchPages/' + searchPageName).update({
         publishhtml: htmlContent,
     }).then(() => {
@@ -146,18 +135,15 @@ publishBtn.onclick = function() {
             authenticationenabled : authenabled,
         })
         .then(() => {
-        console.log('Search page data saved successfully.');
-        window.open('/preview?searchPageName=' + searchPageName);
-        window.location.reload();
-    }) .catch(error => {
-        console.error('Error saving search page data:', error);
-    });
+            console.log('Search page data saved successfully.');
+            window.open('/preview?searchPageName=' + searchPageName);
+            window.location.reload();
+        }).catch(error => {
+            console.error('Error saving search page data:', error);
+        });
     }).catch(error => {
         console.error('Error updating HTML content in Firebase:', error);
     });
-
-    
-
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -166,9 +152,9 @@ span.onclick = function() {
     modal.style.display = 'none';
 }
 
-
-
 // Function to open Monaco code editor
+let monacoEditor;
+
 function openMonacoEditor() {
     const editorContainer = document.getElementById('editorContainer');
 
@@ -176,7 +162,8 @@ function openMonacoEditor() {
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs' } });
     require(['vs/editor/editor.main'], function () {
         // Create the editor
-        const editor = monaco.editor.create(editorContainer, {
+
+        monacoEditor = monaco.editor.create(editorContainer, {
             value: htmlContent, // Set initial content
             language: 'html',   // Set language
             automaticLayout: true // Automatically adjust editor layout
@@ -184,91 +171,96 @@ function openMonacoEditor() {
 
         // Save button click event handler
         document.getElementById('saveButton').addEventListener('click', function() {
-            const editedHtmlContent = editor.getValue();
+            const editedHtmlContent = monacoEditor.getValue();
             document.querySelector('.monaco-editor').remove();
             // Push edited HTML content to Firebase
-            pushToDatabase(editedHtmlContent, ()=>{
+            pushToDatabase(editedHtmlContent, () => {
                 modal.style.display = 'none';
                 window.location.reload();
             });
-            // Close the modal after saving
-         
         });
     });
-
-
-
-    document.getElementById('lastSavedButton').addEventListener('click', function() {
-        document.querySelector('.monaco-editor').remove();
-        // Push edited HTML content to Firebase
-        getLastSavedHtml(()=>{
-            modal.style.display = 'none';
-            window.location.reload();
-        });
-        // Close the modal after saving
-    })
-
-    document.getElementById('lastPublish').addEventListener('click', function() {
-        document.querySelector('.monaco-editor').remove();
-        // Push edited HTML content to Firebase
-        getlastPublishHtml(()=>{
-            modal.style.display = 'none';
-            window.location.reload();
-        });
-        // Close the modal after saving
-    })
-
-
-
 }
 
+// Tab switching functionality
+document.getElementById('editTab').addEventListener('click', function() {
+    document.getElementById('editTab').classList.add('active');
+    document.getElementById('previewTab').classList.remove('active');
+    document.getElementById('editorContainer').style.display = 'block';
+    document.getElementById('previewContainer').style.display = 'none';
+});
+
+document.getElementById('previewTab').addEventListener('click', function() {
+    document.getElementById('previewTab').classList.add('active');
+    document.getElementById('editTab').classList.remove('active');
+    document.getElementById('editorContainer').style.display = 'none';
+    document.getElementById('previewContainer').style.display = 'block';
+    // Render the preview content
+    const editorContent = monacoEditor.getValue();
+    console.log(editorContent)
+    renderSearchPageOnEditor(searchPage,editorContent);
+});
+
+document.getElementById('lastSavedButton').addEventListener('click', function() {
+    document.querySelector('.monaco-editor').remove();
+    getLastSavedHtml(() => {
+        modal.style.display = 'none';
+        window.location.reload();
+    });
+});
+
+document.getElementById('lastPublish').addEventListener('click', function() {
+    document.querySelector('.monaco-editor').remove();
+    getlastPublishHtml(() => {
+        modal.style.display = 'none';
+        window.location.reload();
+    });
+});
+
 function getlastPublishHtml(callback){
-    database.ref('searchPages/' + searchPageName).get().then((snapshot)=>{
+    database.ref('searchPages/' + searchPageName).get().then((snapshot) => {
         const snapshotData = snapshot.val();
         const publishhtml = snapshotData.publishhtml;
         const html = snapshotData.html;
-            database.ref('searchPages/' + searchPageName).update({
-                html: publishhtml,
-                lasthtml: html,
-                publishhtml: null
-            }).then(() => {
-                console.log('HTML content updated in Firebase.');
-                callback();
-            }).catch(error => {
-                console.error('Error updating HTML content in Firebase:', error);
-            });
+        database.ref('searchPages/' + searchPageName).update({
+            html: publishhtml,
+            lasthtml: html,
+            publishhtml: null
+        }).then(() => {
+            console.log('HTML content updated in Firebase.');
+            callback();
+        }).catch(error => {
+            console.error('Error updating HTML content in Firebase:', error);
+        });
     }).catch(error => { 
         console.error('Error updating HTML content in Firebase:', error);
     });
 }
 
 function getLastSavedHtml(callback){
-    database.ref('searchPages/' + searchPageName).get().then((snapshot)=>{
+    database.ref('searchPages/' + searchPageName).get().then((snapshot) => {
         const snapshotData = snapshot.val();
         const lasthtml = snapshotData.lasthtml;
-            database.ref('searchPages/' + searchPageName).update({
-                html: lasthtml,
-                lasthtml: null
-            }).then(() => {
-                console.log('HTML content updated in Firebase.');
-                callback();
-            }).catch(error => {
-                console.error('Error updating HTML content in Firebase:', error);
-            });
+        database.ref('searchPages/' + searchPageName).update({
+            html: lasthtml,
+            lasthtml: null
+        }).then(() => {
+            console.log('HTML content updated in Firebase.');
+            callback();
+        }).catch(error => {
+            console.error('Error updating HTML content in Firebase:', error);
+        });
     }).catch(error => { 
         console.error('Error updating HTML content in Firebase:', error);
     });
 }
 
-
-
 // Function to push edited HTML content to Firebase Realtime Database
 function pushToDatabase(htmlContent, callback) {
-    // Push the edited HTML content to Firebase Realtime Database
-    database.ref('searchPages/' + searchPageName).get().then((snapshot)=>{
+    database.ref('searchPages/' + searchPageName).get().then((snapshot) => {
         const snapshotData = snapshot.val();
         const lasthtml = snapshotData.html;
-        if(lasthtml !== htmlContent){
+        if (lasthtml !== htmlContent) {
             database.ref('searchPages/' + searchPageName).update({
                 html: htmlContent,
                 lasthtml: lasthtml,
@@ -278,30 +270,23 @@ function pushToDatabase(htmlContent, callback) {
             }).catch(error => {
                 console.error('Error updating HTML content in Firebase:', error);
             });
-        }else{
+        } else {
             callback();
         }
-        
     }).catch(error => { 
         console.error('Error updating HTML content in Firebase:', error);
     });
-
 }
 
-function pushAuthConfigToDatabase(check, callback) {
-    // Push the edited HTML content to Firebase Realtime Database
-            database.ref('searchPages/' + searchPageName).update({
-                authenticationenabled: check,
-            }).then(() => {
-                console.log('Authentication config  updated in Firebase.');
-            }).catch(error => {
-                console.error('Error updating HTML content in Firebase:', error);
-            });
-
+function pushAuthConfigToDatabase(check) {
+    database.ref('searchPages/' + searchPageName).update({
+        authenticationenabled: check,
+    }).then(() => {
+        console.log('Authentication config updated in Firebase.');
+    }).catch(error => {
+        console.error('Error updating HTML content in Firebase:', error);
+    });
 }
-
-// Retrieve search page content from Firebase Realtime Database
-
 
 // Function to render the search page content
 function renderSearchPage(searchPageData) {
@@ -310,27 +295,24 @@ function renderSearchPage(searchPageData) {
     authDiv.style.display = 'flex';
     const accessToken = searchPageData.accesstoken;
     const organizationId = searchPageData.organizationid;
-    const authentication = searchPageData.authentication;
-    const html = searchPageData.html;
     const auth = searchPageData.authenticationenabled;
-    if(auth){
+    const html = searchPageData.html;
+    if (auth) {
         document.querySelector("#AuthCheckbox input[type='checkbox']").checked = true;
     }
-     htmlContent = html;
-    console.log(searchPageData)
-     if(searchPageData?.lasthtml){
-        document.getElementById('lastSavedButton').removeAttribute("disabled")
-     }
-     else{
-        document.getElementById('lastSavedButton').setAttribute("disabled", "true")
-     }
+    htmlContent = html;
+    console.log(searchPageData);
+    if (searchPageData?.lasthtml) {
+        document.getElementById('lastSavedButton').removeAttribute("disabled");
+    } else {
+        document.getElementById('lastSavedButton').setAttribute("disabled", "true");
+    }
 
-     if(searchPageData?.publishhtml){
-        document.getElementById('lastPublish').removeAttribute("disabled")
-     }
-     else{
-        document.getElementById('lastPublish').setAttribute("disabled", "true")
-     }
+    if (searchPageData?.publishhtml) {
+        document.getElementById('lastPublish').removeAttribute("disabled");
+    } else {
+        document.getElementById('lastPublish').setAttribute("disabled", "true");
+    }
 
     if (accessToken && organizationId) {
         // Update HTML elements with access token and organization ID
@@ -338,18 +320,18 @@ function renderSearchPage(searchPageData) {
         scriptTag.setAttribute('type', 'module');
         scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v2/atomic.esm.js`);
         document.head.appendChild(scriptTag);
-    
+
         scriptTag.onload = async () => {
             await customElements.whenDefined('atomic-search-interface');
             const searchInterface = document.querySelector('atomic-search-interface');
-    
+
             // Initialization
             await searchInterface.initialize({
                 accessToken: accessToken,
                 organizationId: organizationId,
                 organizationEndpoints: await searchInterface.getOrganizationEndpoints(organizationId),
             });
-    
+
             // Trigger a first search
             searchInterface.executeFirstSearch();
         };
@@ -357,8 +339,61 @@ function renderSearchPage(searchPageData) {
         // If access token or organization ID is missing, redirect back to home page
     }
 
-
-
     // Render the search page HTML content
     document.getElementById('searchPageContent').innerHTML = htmlContent;
+}
+
+
+// Function to render the search page content
+function renderSearchPageOnEditor(searchPageData,content) {
+    console.log("hamza",searchPageData)
+    btn.style.display = 'block';
+    publishBtn.style.display = 'block';
+    authDiv.style.display = 'flex';
+    const accessToken = searchPageData.accesstoken;
+    const organizationId = searchPageData.organizationid;
+    const auth = searchPageData.authenticationenabled;
+    if (auth) {
+        document.querySelector("#AuthCheckbox input[type='checkbox']").checked = true;
+    }
+    console.log(searchPageData);
+    if (searchPageData?.lasthtml) {
+        document.getElementById('lastSavedButton').removeAttribute("disabled");
+    } else {
+        document.getElementById('lastSavedButton').setAttribute("disabled", "true");
+    }
+
+    if (searchPageData?.publishhtml) {
+        document.getElementById('lastPublish').removeAttribute("disabled");
+    } else {
+        document.getElementById('lastPublish').setAttribute("disabled", "true");
+    }
+
+    if (accessToken && organizationId) {
+        // Update HTML elements with access token and organization ID
+        const scriptTag = document.createElement('script');
+        scriptTag.setAttribute('type', 'module');
+        scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v2/atomic.esm.js`);
+        document.head.appendChild(scriptTag);
+
+        scriptTag.onload = async () => {
+            await customElements.whenDefined('atomic-search-interface');
+            const searchInterface = document.querySelector('.modal-content atomic-search-interface');
+
+            // Initialization
+            await searchInterface.initialize({
+                accessToken: accessToken,
+                organizationId: organizationId,
+                organizationEndpoints: await searchInterface.getOrganizationEndpoints(organizationId),
+            });
+
+            // Trigger a first search
+            searchInterface.executeFirstSearch();
+        };
+    } else {
+        // If access token or organization ID is missing, redirect back to home page
+    }
+
+    // Render the search page HTML content
+    document.getElementById('previewContainer').innerHTML = content;
 }

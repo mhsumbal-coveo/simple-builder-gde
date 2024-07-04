@@ -35,14 +35,20 @@
     <div id="editorModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <div id="editorContainer" style="width: 90%; height: 800px;"></div>
+            <div class="tab-container">
+                <button class="tab-button active" id="editTab">Edit</button>
+                <button class="tab-button" id="previewTab">Preview</button>
+            </div>
+            <div id="editorContainer" class="tab-content" style="width: 90%; height: 65vh;"></div>
+            <div id="previewContainer" class="tab-content" style="width: 90%; height: 65vh; display: none;"></div>
             <button id="saveButton">Save</button>
             <span style="margin-left:50px">Go to </span>
             <button id="lastSavedButton">Last Save</button>
-            <span >Or</span>
+            <span>Or</span>
             <button id="lastPublish">Last Publish</button>
         </div>
     </div>
+    
     <script src="searchpage.js"></script>
 </body>
 </html>
