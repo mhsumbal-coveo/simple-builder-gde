@@ -132,7 +132,7 @@ publishBtn.onclick = function() {
             html: htmlContent,
             accesstoken: searchPage.accesstoken,
             organizationid: searchPage.organizationid,
-            authenticationenabled : authenabled,
+            authenticationenabled : authcheckbox.checked,
         })
         .then(() => {
             console.log('Search page data saved successfully.');
@@ -353,6 +353,7 @@ function renderSearchPageOnEditor(searchPageData,content) {
     const accessToken = searchPageData.accesstoken;
     const organizationId = searchPageData.organizationid;
     const auth = searchPageData.authenticationenabled;
+    authenabled = auth;
     if (auth) {
         document.querySelector("#AuthCheckbox input[type='checkbox']").checked = true;
     }
