@@ -31,6 +31,7 @@ function saveSearchPageData(searchPageName, accessToken, organizationId, usernam
                         organizationid: organizationId,
                         html: samplepage,
                         username: username,
+                        authenticationenabled: false
                     })
                     .then(() => {
                         console.log('Search page data saved successfully.');

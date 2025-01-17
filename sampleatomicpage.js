@@ -122,7 +122,10 @@ atomic-search-layout {
                 </atomic-result-badge>
               </atomic-field-condition>
             </atomic-result-section-badges>
-            <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
+            <atomic-result-section-title>
+            <atomic-result-link></atomic-result-link>
+            <atomic-quickview></atomic-quickview>
+            </atomic-result-section-title>
             <atomic-result-section-title-metadata>
               <atomic-field-condition class="field" if-defined="snrating">
                 <atomic-result-rating field="snrating"></atomic-result-rating>

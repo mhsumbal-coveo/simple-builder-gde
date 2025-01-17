@@ -90,6 +90,15 @@
     color: #fff;
 }
 
+#AuthCheckbox {
+    right: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#AuthCheckbox label{
+    margin: 0;
+}
 
 #loginContainer {
     max-width: 400px;
@@ -107,7 +116,7 @@ label {
 
 input[type="email"],
 input[type="password"] {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
@@ -132,3 +141,34 @@ input[type="password"] {
 body {
     font-family: Arial, sans-serif;
 }
+
+.tab-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: #f1f1f1;
+    color: #333;
+    margin: 0 5px;
+}
+
+.tab-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.tab-content {
+    display: block;
+    overflow: scroll;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+
