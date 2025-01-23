@@ -318,7 +318,7 @@ function renderSearchPage(searchPageData) {
         // Update HTML elements with access token and organization ID
         const scriptTag = document.createElement('script');
         scriptTag.setAttribute('type', 'module');
-        scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v2/atomic.esm.js`);
+        scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v3/atomic.esm.js`);
         document.head.appendChild(scriptTag);
 
         scriptTag.onload = async () => {
@@ -329,7 +329,7 @@ function renderSearchPage(searchPageData) {
             await searchInterface.initialize({
                 accessToken: accessToken,
                 organizationId: organizationId,
-                organizationEndpoints: await searchInterface.getOrganizationEndpoints(organizationId),
+           /*      organizationEndpoints: await searchInterface.getOrganizationEndpoints(organizationId), */
             });
 
             // Trigger a first search
@@ -374,7 +374,7 @@ function renderSearchPageOnEditor(searchPageData,content) {
         // Update HTML elements with access token and organization ID
         const scriptTag = document.createElement('script');
         scriptTag.setAttribute('type', 'module');
-        scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v2/atomic.esm.js`);
+        scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v3/atomic.esm.js`);
         document.head.appendChild(scriptTag);
 
         scriptTag.onload = async () => {
@@ -385,7 +385,7 @@ function renderSearchPageOnEditor(searchPageData,content) {
             await searchInterface.initialize({
                 accessToken: accessToken,
                 organizationId: organizationId,
-                organizationEndpoints: await searchInterface.getOrganizationEndpoints(organizationId),
+            /*     organizationEndpoints: await searchInterface.getOrganizationEndpoints(organizationId), */
             });
 
             // Trigger a first search

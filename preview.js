@@ -123,18 +123,18 @@ function renderSearchPage(searchPageData) {
         // Update HTML elements with access token and organization ID
         const scriptTag = document.createElement('script');
         scriptTag.setAttribute('type', 'module');
-        scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v2/atomic.esm.js`);
+        scriptTag.setAttribute('src', `https://static.cloud.coveo.com/atomic/v3/atomic.esm.js`);
         document.head.appendChild(scriptTag);
         document.title = searchPageName;
         scriptTag.onload = async () => {
             await customElements.whenDefined('atomic-search-interface');
             const searchInterface = document.querySelector('atomic-search-interface');
-    
+            console.log(searchInterface)
             // Initialization
             await searchInterface.initialize({
                 accessToken: accessToken,
                 organizationId: organizationId,
-                organizationEndpoints: await searchInterface.getOrganizationEndpoints(organizationId),
+               /*  organizationEndpoints: await searchInterface.getOrganizationEndpoints(organizationId), */
             });
     
             // Trigger a first search
