@@ -1,6 +1,7 @@
 // Retrieve the search page name from the query parameter
 const urlParams = new URLSearchParams(window.location.search);
 const searchPageName = urlParams.get('searchPageName');
+const language = urlParams.get('language');
 var htmlContent = ``;
 var searchPage = null;
 // Reference to the Firebase Realtime Database
@@ -130,6 +131,10 @@ function renderSearchPage(searchPageData) {
             await customElements.whenDefined('atomic-search-interface');
             const searchInterface = document.querySelector('atomic-search-interface');
             console.log(searchInterface)
+            console.log(language)
+            if(language){
+                searchInterface.language = language;
+            }
             // Initialization
             await searchInterface.initialize({
                 accessToken: accessToken,
