@@ -12,12 +12,12 @@ The demo environment consists of three main pages:
 
 ### Home Page
 
-- **Link:** [Simple Builder GDE Home Page](https://hosted-gde.netlify.app)
+- **Link:** [Simple Builder GDE Home Page](https://sgde.coveodemo.com)
 - **Description:** This page is used to create search pages.
 
 ### Edit Page
 
-- **Example Link:** [Edit Page Example](https://hosted-gde.netlify.app/searchpage.html?searchPageName=CIBC)
+- **Example Link:** [Edit Page Example](https://sgde.coveodemo.com/searchpage.html?searchPageName=CIBC)
 - **Credentials:**
   - **Email:** hamza@cibc.com
   - **Password:** password
@@ -25,5 +25,5 @@ The demo environment consists of three main pages:
 
 ### Preview Page
 
-- **Link:** [Preview Page](https://hosted-gde.netlify.app/preview.html?searchPageName=CIBC#)
+- **Link:** [Preview Page](https://sgde.coveodemo.com/preview.html?searchPageName=CIBC#)
 - **Description:** This page provides a preview of the search page, which can be shared with customers.
